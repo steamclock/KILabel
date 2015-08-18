@@ -46,6 +46,11 @@ typedef NS_ENUM(NSUInteger, KILinkType)
      *  URLs, http etc
      */
     KILinkTypeURL,
+    
+    /**
+     *  Keywords
+     */
+    KILinkTypeKeyword,
 };
 
 /**
@@ -72,6 +77,11 @@ typedef NS_OPTIONS(NSUInteger, KILinkTypeOption)
      *  Specifies to include KILinkTypeURL links
      */
     KILinkTypeOptionURL = 1 << KILinkTypeURL,
+    
+    /**
+     *  Specifies to include KILinkTypeURL links
+     */
+    KILinkTypeOptionKeyword = 1 << KILinkTypeKeyword,
     
     /**
      *  Convenience contstant to include all link types
@@ -122,6 +132,13 @@ IB_DESIGNABLE
  * @discussion The comparison between the matches and the ignored words is case insensitive.
  */
 @property (nullable, nonatomic, strong) NSSet *ignoredKeywords;
+
+/**
+ * Set containing words to be used as links
+ *
+ * @discussion The comparison between the matches and the keywords is case insensitive.
+ */
+@property (nullable, nonatomic, strong) NSString *keyword;
 
 /** ****************************************************************************************** **
  * @name Format & Appearance
@@ -175,6 +192,11 @@ IB_DESIGNABLE
  * Callback block for KILinkTypeURL link tap.
  */
 @property (nullable, nonatomic, copy) KILinkTapHandler urlLinkTapHandler;
+
+/**
+ * Callback block for KILinkTypeKeyword link tap.
+ */
+@property (nullable, nonatomic, copy) KILinkTapHandler keywordLinkTapHandler;
 
 /** ****************************************************************************************** **
  * @name Geometry
