@@ -471,7 +471,6 @@ NSString * const KILabelLinkKey = @"link";
 
     NSError *error = nil;
     NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", self.keyword];
-    NSLog(@"%@", pattern);
     regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
   
     // Run the expression and get matches
