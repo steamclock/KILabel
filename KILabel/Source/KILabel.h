@@ -51,6 +51,11 @@ typedef NS_ENUM(NSUInteger, KILinkType)
      *  Keywords
      */
     KILinkTypeKeyword,
+
+    /**
+     *  Keywords
+     */
+    KILinkTypeChallengeHashtag,
 };
 
 /**
@@ -79,9 +84,14 @@ typedef NS_OPTIONS(NSUInteger, KILinkTypeOption)
     KILinkTypeOptionURL = 1 << KILinkTypeURL,
     
     /**
-     *  Specifies to include KILinkTypeURL links
+     *  Specifies to include KILinkTypeKeyword links
      */
     KILinkTypeOptionKeyword = 1 << KILinkTypeKeyword,
+    
+    /**
+     *  Specifies to include KILinkTypeChallengeHashtag links
+     */
+    KILinkTypeOptionChallengeHashtag = 1 << KILinkTypeChallengeHashtag,
     
     /**
      *  Convenience contstant to include all link types
@@ -134,11 +144,16 @@ IB_DESIGNABLE
 @property (nullable, nonatomic, strong) NSSet *ignoredKeywords;
 
 /**
- * Set containing words to be used as links
+ * Word to be used as a keyword link
  *
  * @discussion The comparison between the matches and the keywords is case insensitive.
  */
 @property (nullable, nonatomic, strong) NSString *keyword;
+
+/**
+ * Text to be used as a challenge hashtag link
+ */
+@property (nullable, nonatomic, strong) NSString *challengeHashtag;
 
 /** ****************************************************************************************** **
  * @name Format & Appearance
@@ -197,6 +212,11 @@ IB_DESIGNABLE
  * Callback block for KILinkTypeKeyword link tap.
  */
 @property (nullable, nonatomic, copy) KILinkTapHandler keywordLinkTapHandler;
+
+/**
+ * Callback block for KILinkTypeChallengeHashtag link tap.
+ */
+@property (nullable, nonatomic, copy) KILinkTapHandler challengeHashtagLinkTapHandler;
 
 /** ****************************************************************************************** **
  * @name Geometry

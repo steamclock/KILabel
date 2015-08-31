@@ -377,7 +377,17 @@ NSString * const KILabelLinkKey = @"link";
     {
         [rangesForLinks addObjectsFromArray:[self getRangesForUserHandles:text.string]];
     }
+
+    if (self.linkDetectionTypes & KILinkTypeKeyword)
+    {
+        [rangesForLinks addObjectsFromArray:[self getRangesForKeyword:text.string]];
+    }
     
+    if (self.linkDetectionTypes & KILinkTypeChallengeHashtag)
+    {
+        [rangesForLinks addObjectsFromArray:[self getRangesForChallengeHashtag:text.string]];
+    }
+
     if (self.linkDetectionTypes & KILinkTypeOptionHashtag)
     {
         [rangesForLinks addObjectsFromArray:[self getRangesForHashtags:text.string]];
@@ -387,12 +397,7 @@ NSString * const KILabelLinkKey = @"link";
     {
         [rangesForLinks addObjectsFromArray:[self getRangesForURLs:self.attributedText]];
     }
-    
-    if (self.linkDetectionTypes & KILinkTypeKeyword)
-    {
-        [rangesForLinks addObjectsFromArray:[self getRangesForKeyword:text.string]];
-    }
-    
+
     return rangesForLinks;
 }
 
@@ -492,6 +497,38 @@ NSString * const KILabelLinkKey = @"link";
     }
     
     return rangesForKeywords;
+}
+
+- (NSArray *)getRangesForChallengeHashtag:(NSString *)text
+{
+    NSMutableArray *rangesForChallengeHashtag = [[NSMutableArray alloc] init];
+    
+    // Setup a regular expression
+    static NSRegularExpression *regex = nil;
+    
+    NSError *error = nil;
+    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", self.challengeHashtag];
+    regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+    
+    // Run the expression and get matches
+    NSArray *matches = [regex matchesInString:text options:0 range:NSMakeRange(0, text.length)];
+    
+    // Add all our ranges to the result
+    for (NSTextCheckingResult *match in matches)
+    {
+        NSRange matchRange = [match range];
+        NSString *matchString = [text substringWithRange:matchRange];
+        
+        if (![self ignoreMatch:matchString])
+        {
+            [rangesForChallengeHashtag addObject:@{KILabelLinkTypeKey : @(KILinkTypeChallengeHashtag),
+                                           KILabelRangeKey : [NSValue valueWithRange:matchRange],
+                                           KILabelLinkKey : matchString,
+                                           }];
+        }
+    }
+    
+    return rangesForChallengeHashtag;
 }
 
 - (NSArray *)getRangesForURLs:(NSAttributedString *)text
@@ -761,6 +798,12 @@ NSString * const KILabelLinkKey = @"link";
         if (_keywordLinkTapHandler)
         {
             _keywordLinkTapHandler(self, string, range);
+        }
+        break;
+    case KILinkTypeChallengeHashtag:
+        if (_challengeHashtagLinkTapHandler)
+        {
+            _challengeHashtagLinkTapHandler(self, string, range);
         }
         break;
     }
