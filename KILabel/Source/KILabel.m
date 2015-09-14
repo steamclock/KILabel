@@ -383,9 +383,9 @@ NSString * const KILabelLinkKey = @"link";
         [rangesForLinks addObjectsFromArray:[self getRangesForKeyword:text.string]];
     }
     
-    if (self.linkDetectionTypes & KILinkTypeChallengeHashtag)
+    if (self.linkDetectionTypes & KILinkTypeChallengeTitle)
     {
-        [rangesForLinks addObjectsFromArray:[self getRangesForChallengeHashtag:text.string]];
+        [rangesForLinks addObjectsFromArray:[self getRangesForChallengeTitle:text.string]];
     }
 
     if (self.linkDetectionTypes & KILinkTypeOptionHashtag)
@@ -499,15 +499,15 @@ NSString * const KILabelLinkKey = @"link";
     return rangesForKeywords;
 }
 
-- (NSArray *)getRangesForChallengeHashtag:(NSString *)text
+- (NSArray *)getRangesForChallengeTitle:(NSString *)text
 {
-    NSMutableArray *rangesForChallengeHashtag = [[NSMutableArray alloc] init];
+    NSMutableArray *rangesForChallengeTitle = [[NSMutableArray alloc] init];
     
     // Setup a regular expression
     static NSRegularExpression *regex = nil;
     
     NSError *error = nil;
-    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", self.challengeHashtag];
+    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", self.challengeTitle];
     regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
     
     // Run the expression and get matches
@@ -521,14 +521,14 @@ NSString * const KILabelLinkKey = @"link";
         
         if (![self ignoreMatch:matchString])
         {
-            [rangesForChallengeHashtag addObject:@{KILabelLinkTypeKey : @(KILinkTypeChallengeHashtag),
+            [rangesForChallengeTitle addObject:@{KILabelLinkTypeKey : @(KILinkTypeChallengeTitle),
                                            KILabelRangeKey : [NSValue valueWithRange:matchRange],
                                            KILabelLinkKey : matchString,
                                            }];
         }
     }
     
-    return rangesForChallengeHashtag;
+    return rangesForChallengeTitle;
 }
 
 - (NSArray *)getRangesForURLs:(NSAttributedString *)text
@@ -800,10 +800,10 @@ NSString * const KILabelLinkKey = @"link";
             _keywordLinkTapHandler(self, string, range);
         }
         break;
-    case KILinkTypeChallengeHashtag:
-        if (_challengeHashtagLinkTapHandler)
+    case KILinkTypeChallengeTitle:
+        if (_challengeTitleLinkTapHandler)
         {
-            _challengeHashtagLinkTapHandler(self, string, range);
+            _challengeTitleLinkTapHandler(self, string, range);
         }
         break;
     }
