@@ -475,7 +475,8 @@ NSString * const KILabelLinkKey = @"link";
     static NSRegularExpression *regex = nil;
 
     NSError *error = nil;
-    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", self.keyword];
+    NSString *key =  [NSRegularExpression escapedPatternForString:self.keyword];
+    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", key];
     regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
   
     // Run the expression and get matches
@@ -507,7 +508,8 @@ NSString * const KILabelLinkKey = @"link";
     static NSRegularExpression *regex = nil;
     
     NSError *error = nil;
-    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", self.challengeTitle];
+    NSString *key =  [NSRegularExpression escapedPatternForString:self.challengeTitle];
+    NSString *pattern = [NSString stringWithFormat:@"(?<![\\w\\d])%@(?![\\w\\d])", key];
     regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
     
     // Run the expression and get matches
